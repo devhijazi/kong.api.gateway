@@ -4,31 +4,31 @@ NETWORK_NAME="kong-network"
 COMPOSE_CMD="docker compose"
 
 start_environment() {
-  echo "🚀 Iniciando o ambiente Kong API Gateway..."
+  echo "Iniciando o ambiente Kong API Gateway..."
 
-  echo "🔎 Verificando a rede Docker '$NETWORK_NAME'..."
+  echo "Verificando a rede Docker '$NETWORK_NAME'..."
   docker network inspect $NETWORK_NAME >/dev/null 2>&1 || {
     echo "-> Rede '$NETWORK_NAME' não encontrada. Criando..."
     docker network create $NETWORK_NAME
   }
 
-  echo "🔄 Subindo Postgres..."
+  echo "Subindo Postgres..."
   $COMPOSE_CMD up -d kongdb
-  echo "⏳ Aguardando Postgres inicializar..."
+  echo "Aguardando Postgres inicializar..."
   sleep 5
 
-  echo "⚙️ Executando migrations do Kong..."
+  echo "Executando migrations do Kong..."
   $COMPOSE_CMD run --rm kong-migrations
   $COMPOSE_CMD run --rm kong-migrations-up
 
-  echo "⚙️ Preparando banco do Konga..."
+  echo "Preparando banco do Konga..."
   $COMPOSE_CMD run --rm konga-prepare
 
-  echo "🔄 Subindo Kong e Konga..."
+  echo "Subindo Kong e Konga..."
   $COMPOSE_CMD up -d kong konga
 
   echo ""
-  echo "✅ Ambiente iniciado com sucesso!"
+  echo "Ambiente iniciado com sucesso!"
   echo "Kong Admin:   http://localhost:8001"
   echo "Kong Proxy:   http://localhost:9080"
   echo "Konga UI:     http://localhost:1337"
@@ -38,7 +38,7 @@ start_environment() {
 }
 
 clean_environment() {
-  echo "🧹 Limpando ambiente Kong API Gateway..."
+  echo "Limpando ambiente Kong API Gateway..."
 
   echo "Parando e removendo containers..."
   $COMPOSE_CMD down -v --remove-orphans
@@ -46,7 +46,7 @@ clean_environment() {
   echo "Removendo rede '$NETWORK_NAME'..."
   docker network rm $NETWORK_NAME >/dev/null 2>&1 || echo "-> Rede não encontrada."
 
-  echo "✅ Ambiente limpo com sucesso!"
+  echo "Ambiente limpo com sucesso!"
 }
 
 show_menu() {
